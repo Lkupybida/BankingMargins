@@ -49,6 +49,26 @@ def divide(file1, file2, name):
     df1.to_csv(output_file)
 
 
+# for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
+#               ['NII_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
+#               ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
+#     divide(files[0], files[1], files[2])
+
+def divide_composite(file1, file2, name):
+    df1 = pd.read_csv('./../../data/composite_ser/' + file1)
+    df2 = pd.read_csv('./../../data/composite_ser/' + file2)
+    df1['date'] = pd.to_datetime(df1['date'])
+    df1.set_index('date', inplace=True)
+    df2['date'] = pd.to_datetime(df2['date'])
+    df2.set_index('date', inplace=True)
+
+    for i in range(0, len(df1)):
+        for j in range(0, len(df1.columns)):
+            df1.iloc[i, j] = float(df1.iloc[i, j]) / float(df2.iloc[i, j])
+    output_file = './../../data/composite_vars/' + name
+    df1.to_csv(output_file)
+
+
 for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
               ['NII_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
               ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
