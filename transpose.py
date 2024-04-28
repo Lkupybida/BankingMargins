@@ -15,8 +15,8 @@ def transpose_resample(name):
 # for name in ['AE.csv', 'C.csv', 'C.csv', 'D.csv', 'L.csv', 'LA.csv', 'NI.csv', 'NII.csv', 'TA.csv', 'TI.csv']:
 #     transpose_resample(name)
 
-for name in ['TE.csv']:
-    transpose_resample(name)
+# for name in ['TE.csv']:
+#     transpose_resample(name)
 
 def select_banks(banks_list, file):
     file_name, file_extension = os.path.splitext(file)
@@ -31,19 +31,25 @@ banks_list = ['cb privatbank', 'credit agricole bank', 'fuib', 'kredobank', 'osc
 # for file in ['AE.csv', 'C.csv', 'C.csv', 'D.csv', 'L.csv', 'LA.csv', 'NI.csv', 'NII.csv', 'TA.csv', 'TI.csv', 'NPL.csv', 'CL.csv']:
 #     select_banks(banks_list, file)
 
-for name in ['TE.csv']:
-    select_banks(banks_list, name)
+# for name in ['TE.csv']:
+#     select_banks(banks_list, name)
 
-def divide(file1, file2):
-    df1 = pd.read_csv(file1)
-    df2 = pd.read_csv(file2)
+def divide(file1, file2, name):
+    df1 = pd.read_csv('norollsum/' + file1)
+    df2 = pd.read_csv('norollsum/' + file2)
+    df1['date'] = pd.to_datetime(df1['date'])
+    df1.set_index('date', inplace=True)
+    df2['date'] = pd.to_datetime(df2['date'])
+    df2.set_index('date', inplace=True)
 
     for i in range(1, len(df1)):
         for j in range(1, len(df1.columns)):
-            df1.iloc[i, j] /= df2.iloc[i, j]
+            df1.iloc[i, j] = float(df1.iloc[i, j]) / float(df2.iloc[i, j])
+    output_file = 'only_sophomores/' + name
+    df1.to_csv(output_file)
 
-    return df1
 
-#
-# output_file = 'only_sophomores/CR.csv'
-# divide('selected_banks/NPL_sel.csv', 'selected_banks/CL_sel.csv').to_csv(output_file)
+for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
+              ['NII_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
+              ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
+    divide(files[0], files[1], files[2])
