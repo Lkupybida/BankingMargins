@@ -45,7 +45,7 @@ def divide(file1, file2, name):
     for i in range(1, len(df1)):
         for j in range(1, len(df1.columns)):
             df1.iloc[i, j] = float(df1.iloc[i, j]) / float(df2.iloc[i, j])
-    output_file = 'only_sophomores/' + name
+    output_file = 'final_vars/' + name
     df1.to_csv(output_file)
 
 
