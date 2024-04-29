@@ -50,7 +50,7 @@ def divide(file1, file2, name):
 
 
 # for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
-#               ['NII_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
+#               ['NI_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
 #               ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
 #     divide(files[0], files[1], files[2])
 
@@ -69,7 +69,30 @@ def divide_composite(file1, file2, name):
     df1.to_csv(output_file)
 
 
-for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
-              ['NII_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
-              ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
-    divide_composite(files[0], files[1], files[2])
+# for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
+#               ['NI_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
+#               ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
+#     divide_composite(files[0], files[1], files[2])
+
+# divide('NII_sel.csv', 'TI_sel.csv', 'NIA.csv')
+# divide_composite('NII_sel.csv', 'TI_sel.csv', 'NIA.csv')
+
+def remove_row(index_val, file, composite_or_no):
+    if composite_or_no == 1:
+        file = './../../data/positive_composite/' + file
+    else:
+        file = './../../data/positive_banks/' + file
+    df = pd.read_csv(file)
+    df['date'] = pd.to_datetime(df['date'])
+    df.set_index('date', inplace=True)
+    # df.drop(df.index[index], inplace=True)
+    df = df[df.index != index_val]
+    df.to_csv(file)
+
+for date in ['2019-03-01', '2023-09-01', '2020-08-01', '2023-11-01', '2023-12-01', '2021-06-01', '2021-12-01']:
+    for file in ['CDR.csv', 'CR.csv','INF.csv','LAS.csv',
+                 'NIA.csv','NIM.csv','OE.csv','PR.csv',
+                 'RA.csv','ROA.csv','SCTA.csv','SIZE.csv']:
+        for compositness in [0, 1]:
+            remove_row(date, file, compositness)
+
