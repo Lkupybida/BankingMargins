@@ -89,7 +89,7 @@ def remove_row(index_val, file, composite_or_no):
     df = df[df.index != index_val]
     df.to_csv(file)
 
-for date in ['2019-03-01', '2023-09-01', '2020-08-01', '2023-11-01', '2023-12-01', '2021-06-01', '2021-12-01']:
+for date in ['2019-03-01', '2023-09-01', '2020-08-01', '2023-11-01', '2023-12-01', '2021-06-01', '2021-12-01', '2022-04-01', '2022-05-01', '2020-08-01']:
     for file in ['CDR.csv', 'CR.csv','INF.csv','LAS.csv',
                  'NIA.csv','NIM.csv','OE.csv','PR.csv',
                  'RA.csv','ROA.csv','SCTA.csv','SIZE.csv']:
