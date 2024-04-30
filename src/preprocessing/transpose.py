@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import numpy as np
+import pywt
 
 from statsmodels.tsa.seasonal import seasonal_decompose
 
@@ -151,4 +153,33 @@ def remove_trend_pct(path, file, save):
     df = df.rename(columns={'Unnamed: 0': ''})
     df.to_csv(save+file, index=False)
 
-remove_trend_pct('./../../data/7_c_variables/', 'CDR.csv', './../../data/9_c_detrend/')
+def remove_trend_wavelet(path, file, save):
+    df = pd.read_csv(path + file)
+    inx = os.path.splitext(file)[0]
+    coeffs = pywt.wavedec(df[inx], wavelet='db4', level=2)
+    coeffs[1:] = [np.zeros_like(coeff) for coeff in coeffs[1:]]
+
+    trend = pywt.waverec(coeffs, wavelet='db4')[:len(df)]
+    df[os.path.splitext(file)[0]] = df[inx] - trend
+    df = df.rename(columns={'Unnamed: 0': ''})
+    df.to_csv(save + file, index=False)
+
+def remove_trend_decomposition(path, file, save):
+    df = pd.read_csv(path + file)
+    inx = os.path.splitext(file)[0]
+    decomposition = seasonal_decompose(df[os.path.splitext(file)[0]], model='additive', period=12)
+    trend = decomposition.trend
+    seasonal = decomposition.seasonal
+    residual = decomposition.resid
+    df[os.path.splitext(file)[0]] = df[os.path.splitext(file)[0]] - trend
+    df = df.rename(columns={'Unnamed: 0': ''})
+    df.to_csv(save + 'detrended/' + file, index=False)
+    df[os.path.splitext(file)[0]] = residual
+    df = df.rename(columns={'Unnamed: 0': ''})
+    df.to_csv(save + 'deseasoned/' + file, index=False)
+
+for file in ["CDR.csv", "CR.csv", "INF.csv",
+             "LAS.csv", "NIA.csv", "NIM.csv",
+             "OE.csv", "PR.csv", "RA.csv",
+             "ROA.csv", "SCTA.csv", "SIZE.csv"]:
+    remove_trend_wavelet('./../../data/7_c_variables/', file, './../../data/9_c_detrend/wavelet/')
