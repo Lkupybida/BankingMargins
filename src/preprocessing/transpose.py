@@ -147,7 +147,8 @@ def remove_row(index_val, file, composite_or_no):
 
 def remove_trend_pct(path, file, save):
     df = pd.read_csv(path + file)
-    df[1] = df[1].pct_change()
-    df.to_csv(save+file)
+    df[os.path.splitext(file)[0]] = df[os.path.splitext(file)[0]].pct_change()
+    df = df.rename(columns={'Unnamed: 0': ''})
+    df.to_csv(save+file, index=False)
 
-
+remove_trend_pct('./../../data/7_c_variables/', 'CDR.csv', './../../data/9_c_detrend/')
