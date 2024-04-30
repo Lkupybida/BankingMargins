@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 
+from statsmodels.tsa.seasonal import seasonal_decompose
+
 
 def transpose_resample(name):
     file_name = name
@@ -52,18 +54,19 @@ banks_list = [
 
 
 def divide(file1, file2, name):
-    df1 = pd.read_csv("./../../data/norollsum/" + file1)
-    df2 = pd.read_csv("./../../data/norollsum/" + file2)
-    df1["date"] = pd.to_datetime(df1["date"])
-    df1.set_index("date", inplace=True)
-    df2["date"] = pd.to_datetime(df2["date"])
-    df2.set_index("date", inplace=True)
+    df1 = pd.read_csv("./../../data/5_remove_invalid/" + file1)
+    df2 = pd.read_csv("./../../data/5_remove_invalid/" + file2)
+    # df1["date"] = pd.to_datetime(df1["date"])
+    # df1.set_index("date", inplace=True)
+    # df2["date"] = pd.to_datetime(df2["date"])
+    # df2.set_index("date", inplace=True)
 
     for i in range(0, len(df1)):
-        for j in range(0, len(df1.columns)):
+        for j in range(1, len(df1.columns)):
             df1.iloc[i, j] = float(df1.iloc[i, j]) / float(df2.iloc[i, j])
-    output_file = "./../../data/final_vars/" + name
-    df1.to_csv(output_file)
+    df1 = df1.rename(columns={'Unnamed: 0': '', os.path.splitext(file1)[0] : os.path.splitext(name)[0]})
+    output_file = "./../../data/8_variables/" + name
+    df1.to_csv(output_file, index=False)
 
 
 # for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
@@ -73,24 +76,27 @@ def divide(file1, file2, name):
 
 
 def divide_composite(file1, file2, name):
-    df1 = pd.read_csv("./../../data/composite_ser/" + file1)
-    df2 = pd.read_csv("./../../data/composite_ser/" + file2)
-    df1["date"] = pd.to_datetime(df1["date"])
-    df1.set_index("date", inplace=True)
-    df2["date"] = pd.to_datetime(df2["date"])
-    df2.set_index("date", inplace=True)
+    df1 = pd.read_csv("./../../data/6_comp_time_series/" + file1)
+    df2 = pd.read_csv("./../../data/6_comp_time_series/" + file2)
+    # df1["date"] = pd.to_datetime(df1["date"])
+    # df1.set_index("date", inplace=True)
+    # df2["date"] = pd.to_datetime(df2["date"])
+    # df2.set_index("date", inplace=True)
+    old, a = os.path.splitext(file1)
+    new, b = os.path.splitext(name)
 
     for i in range(0, len(df1)):
-        for j in range(0, len(df1.columns)):
+        for j in range(1, len(df1.columns)):
             df1.iloc[i, j] = float(df1.iloc[i, j]) / float(df2.iloc[i, j])
-    output_file = "./../../data/composite_vars/" + name
-    df1.to_csv(output_file)
+    df1 = df1.rename(columns={'Unnamed: 0': '', old: new})
+    output_file = "./../../data/7_c_variables/" + name
+    df1.to_csv(output_file, index=False)
 
-
-# for files in [['NPL_sel.csv', 'CL_sel.csv', 'CR.csv'], ['NII_sel.csv', 'TA_sel.csv', 'NIM.csv'], ['TI_sel.csv', 'TA_sel.csv', 'ROA.csv'],
-#               ['NI_sel.csv', 'TI_sel.csv', 'NIA.csv'], ['C_sel.csv', 'TA_sel.csv', 'SCTA.csv'], ['AE_sel.csv', 'TA_sel.csv', 'OE.csv'],
-#               ['LA_sel.csv', 'TA_sel.csv', 'LAS.csv'], ['L_sel.csv', 'D_sel.csv', 'CDR.csv'], ['TE_sel.csv', 'TA_sel.csv', 'RA.csv']]:
+# for files in [['NPL.csv', 'CL.csv', 'CR.csv'], ['NII.csv', 'TA.csv', 'NIM.csv'], ['TI.csv', 'TA.csv', 'ROA.csv'],
+#               ['NI.csv', 'TI.csv', 'NIA.csv'], ['C.csv', 'TA.csv', 'SCTA.csv'], ['AE.csv', 'TA.csv', 'OE.csv'],
+#               ['LA.csv', 'TA.csv', 'LAS.csv'], ['L.csv', 'D.csv', 'CDR.csv'], ['TE.csv', 'TA.csv', 'RA.csv']]:
 #     divide_composite(files[0], files[1], files[2])
+#     divide(files[0], files[1], files[2])
 
 # divide('NII_sel.csv', 'TI_sel.csv', 'NIA.csv')
 # divide_composite('NII_sel.csv', 'TI_sel.csv', 'NIA.csv')
@@ -109,32 +115,39 @@ def remove_row(index_val, file, composite_or_no):
     df.to_csv(file)
 
 
-for date in [
-    "2019-03-01",
-    "2023-09-01",
-    "2020-08-01",
-    "2023-11-01",
-    "2023-12-01",
-    "2021-06-01",
-    "2021-12-01",
-    "2022-04-01",
-    "2022-05-01",
-    "2020-08-01",
-    "2021-01-01",
-]:
-    for file in [
-        "CDR.csv",
-        "CR.csv",
-        "INF.csv",
-        "LAS.csv",
-        "NIA.csv",
-        "NIM.csv",
-        "OE.csv",
-        "PR.csv",
-        "RA.csv",
-        "ROA.csv",
-        "SCTA.csv",
-        "SIZE.csv",
-    ]:
-        for compositness in [1]:
-            remove_row(date, file, compositness)
+# for date in [
+#     "2019-03-01",
+#     "2023-09-01",
+#     "2020-08-01",
+#     "2023-11-01",
+#     "2023-12-01",
+#     "2021-06-01",
+#     "2021-12-01",
+#     "2022-04-01",
+#     "2022-05-01",
+#     "2020-08-01",
+#     "2021-01-01",
+# ]:
+#     for file in [
+#         "CDR.csv",
+#         "CR.csv",
+#         "INF.csv",
+#         "LAS.csv",
+#         "NIA.csv",
+#         "NIM.csv",
+#         "OE.csv",
+#         "PR.csv",
+#         "RA.csv",
+#         "ROA.csv",
+#         "SCTA.csv",
+#         "SIZE.csv",
+#     ]:
+#         for compositness in [1]:
+#             remove_row(date, file, compositness)
+
+def remove_trend_pct(path, file, save):
+    df = pd.read_csv(path + file)
+    df[1] = df[1].pct_change()
+    df.to_csv(save+file)
+
+
