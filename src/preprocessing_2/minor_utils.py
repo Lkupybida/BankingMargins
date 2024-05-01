@@ -67,7 +67,7 @@ if __name__ == "__main__":
             flatten_variables(data_folder + methods + '/detrended',
                               save_folder + "flatten_variables_" + methods + '_' + 'detrended' + ".csv")
             flatten_variables(data_folder + methods + '/deseasoned',
-                              save_folder + "flatten_variables_" + methods + '_' + 'deseasoned' + ".csv")
+                              save_folder + "flatten_variables_" + methods + '_' + 'detrended_and_deseasoned' + ".csv")
         else:
             flatten_variables(data_folder + methods,
                               save_folder + "flatten_variables_" + methods + ".csv")
