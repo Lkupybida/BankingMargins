@@ -71,10 +71,10 @@ def divide(file1, file2, name):
     df1.to_csv(output_file, index=False)
 
 
-for files in [['NPL.csv', 'CL.csv', 'CR.csv'], ['NII.csv', 'TA.csv', 'NIM.csv'], ['TI.csv', 'TA.csv', 'ROA.csv'],
-              ['NI.csv', 'TI.csv', 'NIA.csv'], ['C.csv', 'TA.csv', 'SCTA.csv'], ['AE.csv', 'TA.csv', 'OE.csv'],
-              ['LA.csv', 'TA.csv', 'LAS.csv'], ['L.csv', 'D.csv', 'CDR.csv'], ['TE.csv', 'TA.csv', 'RA.csv']]:
-    divide(files[0], files[1], files[2])
+# for files in [['NPL.csv', 'CL.csv', 'CR.csv'], ['NII.csv', 'TA.csv', 'NIM.csv'], ['TI.csv', 'TA.csv', 'ROA.csv'],
+#               ['NI.csv', 'TI.csv', 'NIA.csv'], ['C.csv', 'TA.csv', 'SCTA.csv'], ['AE.csv', 'TA.csv', 'OE.csv'],
+#               ['LA.csv', 'TA.csv', 'LAS.csv'], ['L.csv', 'D.csv', 'CDR.csv'], ['TE.csv', 'TA.csv', 'RA.csv']]:
+#     divide(files[0], files[1], files[2])
 
 
 def divide_composite(file1, file2, name):
@@ -212,19 +212,19 @@ all_banks = ['cb privatbank', 'credit agricole bank', 'fuib', 'kredobank', 'osch
 
 
 
-# for file in ["CDR.csv", "CR.csv", "INF.csv",
-#              "LAS.csv", "NIA.csv", "NIM.csv",
-#              "OE.csv", "PR.csv", "RA.csv",
-#              "ROA.csv", "SCTA.csv", "SIZE.csv"]:
-#     remove_trend_pct('./../../data/7_c_variables/', file, './../../data/9_c_detrend/', 1, all_banks)
-#     remove_trend_wavelet('./../../data/7_c_variables/', file, './../../data/9_c_detrend/', 1, all_banks)
-#     remove_trend_decomposition('./../../data/7_c_variables/', file, './../../data/9_c_detrend/', 1, all_banks)
-#     if file == "INF.csv":
-#         compositeness = 1
-#     elif file == "PR.csv":
-#         compositeness = 1
-#     else:
-#         compositeness = 0
-#     remove_trend_pct('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
-#     remove_trend_wavelet('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
-#     remove_trend_decomposition('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
+for file in ["CDR.csv", "CR.csv", "INF.csv",
+             "LAS.csv", "NIA.csv", "NIM.csv",
+             "OE.csv", "PR.csv", "RA.csv",
+             "ROA.csv", "SCTA.csv", "SIZE.csv"]:
+    remove_trend_pct('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
+    remove_trend_wavelet('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
+    remove_trend_decomposition('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
+    if file == "INF.csv":
+        compositeness = 1
+    elif file == "PR.csv":
+        compositeness = 1
+    else:
+        compositeness = 0
+    remove_trend_pct('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
+    remove_trend_wavelet('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
+    remove_trend_decomposition('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
