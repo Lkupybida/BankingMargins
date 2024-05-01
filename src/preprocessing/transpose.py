@@ -214,6 +214,9 @@ for file in ["CDR.csv", "CR.csv", "INF.csv",
              "LAS.csv", "NIA.csv", "NIM.csv",
              "OE.csv", "PR.csv", "RA.csv",
              "ROA.csv", "SCTA.csv", "SIZE.csv"]:
+    remove_trend_pct('./../../data/7_c_variables/', file, './../../data/9_c_detrend/', 1, all_banks)
+    remove_trend_wavelet('./../../data/7_c_variables/', file, './../../data/9_c_detrend/', 1, all_banks)
+    remove_trend_decomposition('./../../data/7_c_variables/', file, './../../data/9_c_detrend/', 1, all_banks)
     if file == "INF.csv":
         compositeness = 1
     elif file == "PR.csv":
