@@ -59,15 +59,39 @@ def flatten_variables(data_folder, save_path):
     resulting_df.to_csv(save_path)
 
 
+def add_dummy_for_year(file_path, dummy_year, dummy_name):
+    dummy_year = datetime.strptime(dummy_year, "%Y")
+    df = pd.read_csv(file_path)
+    df["Date"] = pd.to_datetime(df["Date"], format="%m/%Y")
+    df[dummy_year] = 1 if dummy_year < df["Date"] else 0
+    return df
+
+
 if __name__ == "__main__":
     data_folder = "./../../data/10_detrend/"
-    save_folder = './../../data/11_flattenned/'
-    for methods in ['decomposition', 'pct', 'wavelet']:
-        if methods == 'decomposition':
-            flatten_variables(data_folder + methods + '/detrended',
-                              save_folder + "flatten_variables_" + methods + '_' + 'detrended' + ".csv")
-            flatten_variables(data_folder + methods + '/deseasoned',
-                              save_folder + "flatten_variables_" + methods + '_' + 'detrended_and_deseasoned' + ".csv")
+    save_folder = "./../../data/11_flattenned/"
+    for methods in ["decomposition", "pct", "wavelet"]:
+        if methods == "decomposition":
+            flatten_variables(
+                data_folder + methods + "/detrended",
+                save_folder
+                + "flatten_variables_"
+                + methods
+                + "_"
+                + "detrended"
+                + ".csv",
+            )
+            flatten_variables(
+                data_folder + methods + "/deseasoned",
+                save_folder
+                + "flatten_variables_"
+                + methods
+                + "_"
+                + "detrended_and_deseasoned"
+                + ".csv",
+            )
         else:
-            flatten_variables(data_folder + methods,
-                              save_folder + "flatten_variables_" + methods + ".csv")
+            flatten_variables(
+                data_folder + methods,
+                save_folder + "flatten_variables_" + methods + ".csv",
+            )
