@@ -108,14 +108,16 @@ def remove_row(index_val, file, composite_or_no):
     if composite_or_no == 1:
         file = "./../../data/positive_composite/" + file
     else:
-        file = "./../../data/positive_banks/" + file
+        file = "./../../data/11point5_flattened/" + file
     df = pd.read_csv(file)
-    df["date"] = pd.to_datetime(df["date"])
-    df.set_index("date", inplace=True)
+    #df[df.columns[2]] = pd.to_datetime(df[df.columns[2]])
+    #df.set_index(df.columns[2], inplace=True)
     # df.drop(df.index[index], inplace=True)
-    df = df[df.index != index_val]
+    df = df[df[df.columns[2]] != index_val]
     df.to_csv(file)
-
+for date in ['01/2019', '12/2018']:
+    for file in ['flatten_variables_decomposition_detrended.csv', 'flatten_variables_decomposition_detrended_and_deseasoned.csv', 'flatten_variables_pct.csv', 'flatten_variables_wavelet.csv']:
+        remove_row(date, file, 0)
 
 # for date in [
 #     "2019-03-01",
@@ -212,19 +214,19 @@ all_banks = ['cb privatbank', 'credit agricole bank', 'fuib', 'kredobank', 'osch
 
 
 
-for file in ["CDR.csv", "CR.csv", "INF.csv",
-             "LAS.csv", "NIA.csv", "NIM.csv",
-             "OE.csv", "PR.csv", "RA.csv",
-             "ROA.csv", "SCTA.csv", "SIZE.csv"]:
-    remove_trend_pct('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
-    remove_trend_wavelet('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
-    remove_trend_decomposition('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
-    if file == "INF.csv":
-        compositeness = 1
-    elif file == "PR.csv":
-        compositeness = 1
-    else:
-        compositeness = 0
-    remove_trend_pct('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
-    remove_trend_wavelet('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
-    remove_trend_decomposition('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
+# for file in ["CDR.csv", "CR.csv", "INF.csv",
+#              "LAS.csv", "NIA.csv", "NIM.csv",
+#              "OE.csv", "PR.csv", "RA.csv",
+#              "ROA.csv", "SCTA.csv", "SIZE.csv"]:
+#     remove_trend_pct('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
+#     remove_trend_wavelet('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
+#     remove_trend_decomposition('./../../data/7point5_comp_variables/', file, './../../data/7point8_c_detrended/', 1, all_banks)
+#     if file == "INF.csv":
+#         compositeness = 1
+#     elif file == "PR.csv":
+#         compositeness = 1
+#     else:
+#         compositeness = 0
+#     remove_trend_pct('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
+#     remove_trend_wavelet('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
+#     remove_trend_decomposition('./../../data/4point5_variables/', file, './../../data/7point9_detrended/', compositeness, all_banks)
