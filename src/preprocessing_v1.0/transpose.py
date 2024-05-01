@@ -164,14 +164,14 @@ def remove_trend_wavelet(path, file, save, is_composite, banks):
         coeffs = pywt.wavedec(df[inx], wavelet='db4', level=2)
         coeffs[1:] = [np.zeros_like(coeff) for coeff in coeffs[1:]]
         trend = pywt.waverec(coeffs, wavelet='db4')[:len(df)]
-        df[os.path.splitext(file)[0]] = df[inx] - trend
+        df[inx] = df[inx] - trend
     else:
         for bank in banks:
             inx = bank
             coeffs = pywt.wavedec(df[inx], wavelet='db4', level=2)
             coeffs[1:] = [np.zeros_like(coeff) for coeff in coeffs[1:]]
             trend = pywt.waverec(coeffs, wavelet='db4')[:len(df)]
-            df[os.path.splitext(file)[0]] = df[inx] - trend
+            df[inx] = df[inx] - trend
 
     df = df.rename(columns={'Unnamed: 0': ''})
     df.to_csv(save + 'wavelet/' + file, index=False)
