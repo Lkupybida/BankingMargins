@@ -67,7 +67,7 @@ def divide(file1, file2, name):
         for j in range(1, len(df1.columns)):
             df1.iloc[i, j] = float(df1.iloc[i, j]) / float(df2.iloc[i, j])
     df1 = df1.rename(columns={'Unnamed: 0': '', os.path.splitext(file1)[0] : os.path.splitext(name)[0]})
-    output_file = "./../../data/4,5_variables/" + name
+    output_file = "./../../data/4point5_variables/" + name
     df1.to_csv(output_file, index=False)
 
 
