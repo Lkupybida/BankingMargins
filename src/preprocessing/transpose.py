@@ -147,39 +147,79 @@ def remove_row(index_val, file, composite_or_no):
 #         for compositness in [1]:
 #             remove_row(date, file, compositness)
 
-def remove_trend_pct(path, file, save):
+def remove_trend_pct(path, file, save, is_composite, banks):
     df = pd.read_csv(path + file)
-    df[os.path.splitext(file)[0]] = df[os.path.splitext(file)[0]].pct_change()
+    if is_composite == 1:
+        df[os.path.splitext(file)[0]] = df[os.path.splitext(file)[0]].pct_change()
+    else:
+        for bank in banks:
+            df[bank] = df[bank].pct_change()
     df = df.rename(columns={'Unnamed: 0': ''})
-    df.to_csv(save+file, index=False)
+    df.to_csv(save + 'pct/' + file, index=False)
 
-def remove_trend_wavelet(path, file, save):
+def remove_trend_wavelet(path, file, save, is_composite, banks):
     df = pd.read_csv(path + file)
-    inx = os.path.splitext(file)[0]
-    coeffs = pywt.wavedec(df[inx], wavelet='db4', level=2)
-    coeffs[1:] = [np.zeros_like(coeff) for coeff in coeffs[1:]]
+    if is_composite == 1:
+        inx = os.path.splitext(file)[0]
+        coeffs = pywt.wavedec(df[inx], wavelet='db4', level=2)
+        coeffs[1:] = [np.zeros_like(coeff) for coeff in coeffs[1:]]
+        trend = pywt.waverec(coeffs, wavelet='db4')[:len(df)]
+        df[os.path.splitext(file)[0]] = df[inx] - trend
+    else:
+        for bank in banks:
+            inx = bank
+            coeffs = pywt.wavedec(df[inx], wavelet='db4', level=2)
+            coeffs[1:] = [np.zeros_like(coeff) for coeff in coeffs[1:]]
+            trend = pywt.waverec(coeffs, wavelet='db4')[:len(df)]
+            df[os.path.splitext(file)[0]] = df[inx] - trend
 
-    trend = pywt.waverec(coeffs, wavelet='db4')[:len(df)]
-    df[os.path.splitext(file)[0]] = df[inx] - trend
     df = df.rename(columns={'Unnamed: 0': ''})
-    df.to_csv(save + file, index=False)
+    df.to_csv(save + 'wavelet/' + file, index=False)
 
-def remove_trend_decomposition(path, file, save):
+def remove_trend_decomposition(path, file, save, is_composite, banks):
     df = pd.read_csv(path + file)
-    inx = os.path.splitext(file)[0]
-    decomposition = seasonal_decompose(df[os.path.splitext(file)[0]], model='additive', period=12)
-    trend = decomposition.trend
-    seasonal = decomposition.seasonal
-    residual = decomposition.resid
-    df[os.path.splitext(file)[0]] = df[os.path.splitext(file)[0]] - trend
+    df1 = pd.read_csv(path + file)
+    if is_composite == 1:
+        inx = os.path.splitext(file)[0]
+        decomposition = seasonal_decompose(df[inx], model='additive', period=12)
+        trend = decomposition.trend
+        seasonal = decomposition.seasonal
+        residual = decomposition.resid
+        df[inx] = df[inx] - trend
+        df1[inx] = residual
+    else:
+        for bank in banks:
+            inx = bank
+            decomposition = seasonal_decompose(df[inx], model='additive', period=12)
+            trend = decomposition.trend
+            seasonal = decomposition.seasonal
+            residual = decomposition.resid
+            df[inx] = df[inx] - trend
+            df1[inx] = residual
+
     df = df.rename(columns={'Unnamed: 0': ''})
-    df.to_csv(save + 'detrended/' + file, index=False)
-    df[os.path.splitext(file)[0]] = residual
-    df = df.rename(columns={'Unnamed: 0': ''})
-    df.to_csv(save + 'deseasoned/' + file, index=False)
+    df.to_csv(save + 'decomposition/' + 'detrended/' + file, index=False)
+
+    df1 = df1.rename(columns={'Unnamed: 0': ''})
+    df1.to_csv(save + 'decomposition/' + 'deseasoned/' + file, index=False)
+
+all_banks = ['cb privatbank', 'credit agricole bank', 'fuib', 'kredobank', 'oschadbank', 'otp bank', 'pivdennyi bank', 'raiffeisen bank', 'sense bank', 'ukrsibbank', 'universal bank']
+# for file in ["CDR.csv", "CR.csv", "INF.csv",
+#              "LAS.csv", "NIA.csv", "NIM.csv",
+#              "OE.csv", "PR.csv", "RA.csv",
+#              "ROA.csv", "SCTA.csv", "SIZE.csv"]:
+#     remove_trend_pct('./../../data/7_c_variables/', file, './../../data/9_c_detrend/wavelet/', 1, all_banks)
 
 for file in ["CDR.csv", "CR.csv", "INF.csv",
              "LAS.csv", "NIA.csv", "NIM.csv",
              "OE.csv", "PR.csv", "RA.csv",
              "ROA.csv", "SCTA.csv", "SIZE.csv"]:
-    remove_trend_wavelet('./../../data/7_c_variables/', file, './../../data/9_c_detrend/wavelet/')
+    if file == "INF.csv":
+        compositeness = 1
+    elif file == "PR.csv":
+        compositeness = 1
+    else:
+        compositeness = 0
+        remove_trend_pct('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
+        remove_trend_wavelet('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
+        remove_trend_decomposition('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
