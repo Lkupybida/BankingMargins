@@ -223,6 +223,6 @@ for file in ["CDR.csv", "CR.csv", "INF.csv",
         compositeness = 1
     else:
         compositeness = 0
-        remove_trend_pct('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
-        remove_trend_wavelet('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
-        remove_trend_decomposition('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
+    remove_trend_pct('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
+    remove_trend_wavelet('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)
+    remove_trend_decomposition('./../../data/8_variables/', file, './../../data/10_detrend/', compositeness, all_banks)

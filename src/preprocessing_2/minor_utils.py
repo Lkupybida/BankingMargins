@@ -60,5 +60,14 @@ def flatten_variables(data_folder, save_path):
 
 
 if __name__ == "__main__":
-    data_folder = "./data/8_variables"
-    flatten_variables(data_folder, "./data/flatten_variables.csv")
+    data_folder = "./../../data/10_detrend/"
+    save_folder = './../../data/11_flattenned/'
+    for methods in ['decomposition', 'pct', 'wavelet']:
+        if methods == 'decomposition':
+            flatten_variables(data_folder + methods + '/detrended',
+                              save_folder + "flatten_variables_" + methods + '_' + 'detrended' + ".csv")
+            flatten_variables(data_folder + methods + '/deseasoned',
+                              save_folder + "flatten_variables_" + methods + '_' + 'deseasoned' + ".csv")
+        else:
+            flatten_variables(data_folder + methods,
+                              save_folder + "flatten_variables_" + methods + ".csv")
