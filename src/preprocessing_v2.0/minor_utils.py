@@ -55,7 +55,7 @@ def flatten_variables(data_folder, save_path):
     dummies.columns = [f"is_{i}" for i in dummies]
     for i in dummies:
         resulting_df[i] = dummies[i]
-
+    resulting_df.drop('is_Raiffeisen', axis=1, inplace=True)
     resulting_df.to_csv(save_path)
 
 
