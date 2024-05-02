@@ -18,11 +18,14 @@ class bcolors:
 
 
 def add_dummy_for_date(file_path, dummy_dates, dummy_names):
-    dummy_dates = [datetime.strptime(i, "%m/%Y") for i in dummy_dates]
+    dummy_dates = [(datetime.strptime(i[1:], "%m/%Y"), i[0]) for i in dummy_dates]
     df = pd.read_csv(file_path)
     df["Date"] = pd.to_datetime(df["Date"], format="%m/%Y")
     for i, name in enumerate(dummy_names):
-        df[name] = (df["Date"] > dummy_dates[i]).astype(int)
+        if dummy_dates[i][1] == ">":
+            df[name] = (df["Date"] > dummy_dates[i][0]).astype(int)
+        elif dummy_dates[i][1] == "=":
+            df[name] = (df["Date"] == dummy_dates[i][0]).astype(int)
     return df
 
 
@@ -34,6 +37,7 @@ def run_fixed_effects_on_flattened(
 ):
 
     resulting_df = add_dummy_for_date(file_path, dummy_dates, dummy_names)
+    resulting_df = resulting_df.dropna()
 
     regression_string = "NIM ~ "
     for i in X_var_names:
@@ -59,4 +63,4 @@ def run_fixed_effects_on_flattened(
     )
     print(res3.summary())
 
-    return res3
+    return resulting_df, res3
