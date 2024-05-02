@@ -22,4 +22,9 @@ class ManyModels:
             print(f"Mean-absolute percentage error(MAPE):   {mape_res}")
             print(f"Mean-squred error(MSE):                 {mse_results}")
             print(f"Root mean-squred error(RMSE):           {rmse_results}")
-        return mae_results, mape_res, mse_results, rmse_results
+        return {
+            "MAE": mae_results,
+            "MAPE": mape_res,
+            "MSE": mse_results,
+            "RMSE": rmse_results,
+        }
