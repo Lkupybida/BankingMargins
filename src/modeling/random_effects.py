@@ -1,8 +1,8 @@
 import math
 import pandas as pd
-import scipy.stats as st
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+from manymodels import ManyModels
 
 
 class bcolors:
@@ -119,7 +119,9 @@ def run_rand_effects_on_flattened(
     sigma2_epsilon = lsdv_model_results.ssr / (n * T - (n + k + 1))
     sigma2_pooled = pooled_olsr_model_results.ssr / (n * T - (k + 1))
     sigma2_u = sigma2_pooled - sigma2_epsilon
+    print(sigma2_epsilon, sigma2_u, sigma2_epsilon / (sigma2_epsilon + T * sigma2_u))
     theta = 1 - math.sqrt(sigma2_epsilon / (sigma2_epsilon + T * sigma2_u))
+
     if show_all:
         print("sigma2_epsilon = " + str(sigma2_epsilon))
         print("sigma2_pooled = " + str(sigma2_pooled))
@@ -181,7 +183,7 @@ def run_rand_effects_on_flattened(
     )
     print(re_model_results.summary())
 
-    return re_model_results
+    return ManyModels(file_path, None, re_X, re_y["NIM"], re_model_results)
 
 
 # # Calculate the LM statistic to test for the significance of the Random Effect

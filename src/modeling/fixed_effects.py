@@ -1,8 +1,8 @@
 import pandas as pd
-import os
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from datetime import datetime
+from manymodels import ManyModels
 
 
 class bcolors:
@@ -49,7 +49,26 @@ def run_fixed_effects_on_flattened(
             is_Privat_Bank + is_Raiffeisen + is_Sense + is_Ukrsibbank + is_Universal"
     regression_string = regression_string + dummies_str
 
-    mod3 = smf.ols(formula=regression_string, data=resulting_df)
+    X_list = (
+        X_var_names
+        + [
+            "is_Credit_Agricole",
+            "is_FUIB",
+            "is_Kredobank",
+            "is_OTP",
+            "is_Oschadbank",
+            "is_Pivdennyi",
+            "is_Privat_Bank",
+            "is_Raiffeisen",
+            "is_Sense",
+            "is_Ukrsibbank",
+            "is_Universal",
+        ]
+        + dummy_names
+    )
+
+    # mod3 = smf.ols(formula=regression_string, data=resulting_df)
+    mod3 = sm.OLS(resulting_df["NIM"], resulting_df[X_list])
     res3 = mod3.fit()
     print(
         bcolors.OKBLUE
@@ -63,4 +82,11 @@ def run_fixed_effects_on_flattened(
     )
     print(res3.summary())
 
-    return resulting_df, res3
+    return ManyModels(
+        file_path, resulting_df, resulting_df[X_list], resulting_df["NIM"], res3
+    )
+
+
+if __name__ == "__main__":
+    path = "./data/11_flattenned/flatten_variables_pct.csv"
+    X, y, model, res1 = run_fixed_effects_on_flattened(path)
