@@ -104,19 +104,25 @@ def divide_composite(file1, file2, name):
 # divide_composite('NII_sel.csv', 'TI_sel.csv', 'NIA.csv')
 
 
-def remove_row(index_val, file, composite_or_no):
+def remove_row(index_val, name, composite_or_no):
     if composite_or_no == 1:
-        file = "./../../data/positive_composite/" + file
+        file = "./../../data/positive_composite/" + name
     else:
-        file = "./../../data/11point5_flattened/" + file
+        file = "./../../data/7point9_detrended/pct/" + name
     df = pd.read_csv(file)
-    #df[df.columns[2]] = pd.to_datetime(df[df.columns[2]])
-    #df.set_index(df.columns[2], inplace=True)
-    # df.drop(df.index[index], inplace=True)
-    df = df[df[df.columns[2]] != index_val]
-    df.to_csv(file)
-for date in ['01/2019', '12/2018']:
-    for file in ['flatten_variables_decomposition_detrended.csv', 'flatten_variables_decomposition_detrended_and_deseasoned.csv', 'flatten_variables_pct.csv', 'flatten_variables_wavelet.csv']:
+    # df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
+    # df.set_index(df.columns[0], inplace=True)
+    # df.drop(df.index[index_val], inplace=True)
+    # df = df[df[df.columns[0]] != index_val]
+
+    # Remove the row with the specified index value
+    df = df.drop(index_val, errors='ignore')
+    df.to_csv('./../../data/10point9_remove_invalid/pct/' + name, index=False)
+
+
+for date in ['01/2019', '12/2018', '03.2019', '09.2019', '08.2020', '12.2020', '06.2021', '12.2021', '03.2022', '04.2022', '09.2023', '11.2023', '12.2023']:
+    #for file in ['flatten_variables_decomposition_detrended.csv', 'flatten_variables_decomposition_detrended_and_deseasoned.csv', 'flatten_variables_pct.csv', 'flatten_variables_wavelet.csv']:
+    for file in ["CDR.csv", "CR.csv", "INF.csv", "LAS.csv", "NIA.csv", "NIM.csv", "OE.csv", "PR.csv", "RA.csv", "ROA.csv", "SCTA.csv", "SIZE.csv"]:
         remove_row(date, file, 0)
 
 # for date in [
