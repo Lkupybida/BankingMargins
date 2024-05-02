@@ -68,9 +68,9 @@ def add_dummy_for_year(file_path, dummy_year, dummy_name):
 
 
 if __name__ == "__main__":
-    data_folder = "./../../data/10point9_remove_invalid/"
-    save_folder = "./../../data/11point5_flattened/"
-    for methods in ["decomposition", "pct", "wavelet"]:
+    data_folder = "./../../data/13_mov_aver/"
+    save_folder = "./../../data/14_aver_flat/"
+    for methods in ["pct"]:
         if methods == "decomposition":
             flatten_variables(
                 data_folder + methods + "/detrended",
