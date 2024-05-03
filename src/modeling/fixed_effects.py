@@ -46,7 +46,7 @@ def run_fixed_effects_on_flattened(
         regression_string = regression_string + i + "+ "
 
     dummies_str = "is_Credit_Agricole + is_FUIB + is_Kredobank + is_OTP + is_Oschadbank + is_Pivdennyi + \
-            is_Privat_Bank + is_Raiffeisen + is_Sense + is_Ukrsibbank + is_Universal"
+            is_Privat_Bank + is_Sense + is_Ukrsibbank + is_Universal"
     regression_string = regression_string + dummies_str
 
     X_list = (
@@ -59,7 +59,6 @@ def run_fixed_effects_on_flattened(
             "is_Oschadbank",
             "is_Pivdennyi",
             "is_Privat_Bank",
-            "is_Raiffeisen",
             "is_Sense",
             "is_Ukrsibbank",
             "is_Universal",
